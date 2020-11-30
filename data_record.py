@@ -91,27 +91,21 @@ class DataRecord():
     def get_callsigns(self):        
         cal_dataset = self.dataset.map(
             lambda icao, callsign, data, label: callsign)
-        callsigns = []
-        for tensor in cal_dataset:
-            callsigns.append(tensor.numpy().decode())
+        callsigns = [tensor.numpy().decode() for tensor in cal_dataset]
         return callsigns
     
     @tf.autograph.experimental.do_not_convert
     def get_icaos(self):
         icao_dataset = self.dataset.map(
             lambda icao, callsign, data, label: icao)
-        icaos = []
-        for tensor in icao_dataset:
-            icaos.append(tensor.numpy().decode())
+        icaos = [tensor.numpy().decode() for tensor in icao_dataset]
         return icaos
     
     @tf.autograph.experimental.do_not_convert
     def get_labels(self):
         lab_dataset = self.dataset.map(
             lambda icao, callsign, data, label: label)
-        labels = []
-        for tensor in lab_dataset:
-            labels.append(tensor.numpy())
+        labels = [tensor.numpy().decode() for tensor in lab_dataset]
         return labels
 
    
