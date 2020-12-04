@@ -7,4 +7,4 @@ python:
 
 install:
  - python -m pip install --upgrade codecov pytest-cov pytest
- - python -m pip install --upgrade pandas tensorflow vincenty traffic
+ - python -m pip install --upgrade pandas tensorflow vincenty
