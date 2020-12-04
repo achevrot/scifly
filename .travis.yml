@@ -4,3 +4,7 @@ python:
  - 3.6
  - 3.7
  - 3.8
+
+ install:
+  - python -m pip install --upgrade codecov pytest-cov pytest
+  - python -m pip install --upgrade pandas tensorflow vincenty traffic
