@@ -16,35 +16,21 @@ class DataRecord():
     usable for training. 
     
     """
-    def __init__(self, filenames):
+    def __init__(self, filenames, sequence_features):
+        self.sequence_features = sequence_features
         self.dataset = self.read_record(filenames)
 
-    def _parse_function(example_proto):
-        # Create a description of the features.
-        
+    def _parse_function(self, example_proto):
+
         # Define features
         context_features = {
             'icao': tf.io.FixedLenFeature([], dtype=tf.string),
             'cal': tf.io.FixedLenFeature([], dtype=tf.string)
             }
-    
-        sequence_features = {
-            'alt': tf.io.FixedLenSequenceFeature([], dtype=tf.float32),
-            'd_a': tf.io.FixedLenSequenceFeature([], dtype=tf.float32),
-            'd_b': tf.io.FixedLenSequenceFeature([], dtype=tf.float32),
-            'd_c': tf.io.FixedLenSequenceFeature([], dtype=tf.float32),
-            'd_d': tf.io.FixedLenSequenceFeature([], dtype=tf.float32),
-            'delta': tf.io.FixedLenSequenceFeature([], dtype=tf.float32),
-            'hdg_delta': tf.io.FixedLenSequenceFeature([], dtype=tf.float32),
-            'label': tf.io.FixedLenSequenceFeature([], dtype=tf.float32),
-            'lat': tf.io.FixedLenSequenceFeature([], dtype=tf.float32),
-            'lon': tf.io.FixedLenSequenceFeature([], dtype=tf.float32),
-            'spd': tf.io.FixedLenSequenceFeature([], dtype=tf.float32),
-        }
         
         # Parsing the records
         context, sequence = tf.io.parse_single_sequence_example(
-            example_proto, context_features, sequence_features)
+            example_proto, context_features, self.sequence_features)
         
         # context
         icao = tf.cast(context['icao'], dtype = tf.string)
@@ -105,7 +91,7 @@ class DataRecord():
     def get_labels(self):
         lab_dataset = self.dataset.map(
             lambda icao, callsign, data, label: label)
-        labels = [tensor.numpy().decode() for tensor in lab_dataset]
+        labels = [tensor.numpy() for tensor in lab_dataset]
         return labels
 
    
@@ -113,5 +99,5 @@ class DataRecord():
         files = tf.data.Dataset.list_files([filenames])
         dataset = files.interleave(tf.data.TFRecordDataset, cycle_length=3,
             num_parallel_calls=tf.data.experimental.AUTOTUNE) 
-        dataset = dataset.map(DataRecord._parse_function, num_parallel_calls=2)
+        dataset = dataset.map(self._parse_function, num_parallel_calls=2)
         return dataset
