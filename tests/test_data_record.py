@@ -6,7 +6,7 @@ Created on Fri Dec  4 11:51:07 2020
 @author: antoine
 """
 import tensorflow as tf
-from ../scifly import DataRecord
+from scifly import DataRecord
 
 
 sequence_features = {
