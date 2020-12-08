@@ -26,8 +26,8 @@ def data_cleaner(input_df:pd.DataFrame):
         lambda x: vincenty((x['latitude'], x['longitude']),
                            (x['lat_shift_30'], x['lon_shift_30'])), axis = 1) 
     
-    r_c = df['delta_close'].rolling(timedelta(seconds=300))
-    r_f = df['delta_far'].rolling(timedelta(seconds=300))
+    r_c = df['delta_close'].rolling('300s')
+    r_f = df['delta_far'].rolling('300s')
     
     result = df[((df.delta_close - r_c.median()).abs() < 3 * r_c.std())
                 & ((df.delta_far - r_f.median()).abs() < 3 * r_f.std())]
