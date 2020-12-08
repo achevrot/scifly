@@ -10,7 +10,7 @@ import pandas as pd
 from vincenty import vincenty
 from datetime import timedelta
 
-def data_cleaner(input_df:pd.DataFrame):
+def data_cleaner(input_df:pd.DataFrame, threshold=3):
     
     df = input_df.copy()
     
@@ -29,7 +29,7 @@ def data_cleaner(input_df:pd.DataFrame):
     r_c = df['delta_close'].rolling('300s')
     r_f = df['delta_far'].rolling('300s')
     
-    result = df[((df.delta_close - r_c.median()).abs() < 3 * r_c.std())
-                & ((df.delta_far - r_f.median()).abs() < 3 * r_f.std())]
+    result = df[((df.delta_close - r_c.median()).abs() < threshold * r_c.std())
+            & ((df.delta_far - r_f.median()).abs() < threshold * r_f.std())]
 
     return result
