@@ -5,11 +5,17 @@ Scifly is a library made for Machine Learning scientists to have access to ready
 
 ## Installation
 
-WIP
+For now, the best way to install Scifly is by using pip install :
+```
+pip install git+https://github.com/Wirden/scifly.git
+```
 
 ## Usage
 
-WIP
+```
+import scifly
+scifly.data_cleaner(df) # df being flight data
+```
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
