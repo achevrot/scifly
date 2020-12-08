@@ -18,7 +18,7 @@ Please make sure to update tests as appropriate.
 
 ## Credits and acknowledgments
 
-This work is part of the  published Opensky symposium paper:
+This work is part of the 2020 published Opensky symposium paper:
 
 ```bibtex
 @Article{proceedings2020059009,
