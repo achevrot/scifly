@@ -11,5 +11,6 @@ setup(
         "vincenty",
         "datetime",
         "tensorflow",
+        "pyproj",
     ],
 )
