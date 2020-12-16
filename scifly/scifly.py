@@ -10,7 +10,8 @@ import pandas as pd
 import numpy as np
 from vincenty import vincenty
 import pyproj
-
+import collections
+    
 def data_cleaner(input_df:pd.DataFrame, threshold=3):
     
     df = input_df.copy()
@@ -48,3 +49,14 @@ def track_delta(input_df: pd.DataFrame) -> pd.Series:
     track_ref = np.linspace(start=ref_s, stop=ref_e, num=len(input_df))
     
     return angle_distance(input_df.track, track_ref)
+
+def flight_points(phases, phase_min = 10):
+    counter = collections.Counter(phases)
+    if (counter['DESCENT'] < phase_min or
+            counter['CLIMB'] < phase_min or
+            counter['CRUISE'] < phase_min):
+        return None, None, None, None
+    b = counter['CLIMB']
+    c = len(phases) - counter['DESCENT']
+    
+    return 0,b,c,-1
