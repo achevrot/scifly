@@ -3,7 +3,7 @@ from tensorflow.keras.layers import RepeatVector, TimeDistributed, Dense
 
 class Decoder(tf.keras.layers.Layer):
     def __init__(self, timesteps, n_features, latent_dim=5,
-                 intermediate_dim=15, name="encoder", **kwargs):
+                 intermediate_dim=15, name="decoder", **kwargs):
         
         super(Decoder, self).__init__(name=name, **kwargs)
         self.repeat = RepeatVector(timesteps)
