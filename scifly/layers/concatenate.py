@@ -1,5 +1,5 @@
 import tensorflow as tf
-import tf.keras.layers.concatenate as concatenate
+import tensorflow.keras.layers.concatenate as concatenate
 
 class Concatenate(tf.keras.layers.Layer):
 
