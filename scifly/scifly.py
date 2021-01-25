@@ -11,6 +11,7 @@ import numpy as np
 from vincenty import vincenty
 import pyproj
 import collections
+import tensorflow as tf
     
 def data_cleaner(input_df:pd.DataFrame, threshold=3):
     
@@ -58,5 +59,19 @@ def flight_points(phases, phase_min = 10):
         return None, None, None, None
     b = counter['CLIMB']
     c = len(phases) - counter['DESCENT']
-    
+
     return 0,b,c,-1
+
+def distance_delta(input_df: pd.DataFrame) -> pd.Series:
+    
+    df = input_df.copy()
+    df['lat_shifted'] = df['latitude'].shift(-1)
+    df['lon_shifted'] = df['longitude'].shift(-1)
+
+    delta = df.apply(lambda x: vincenty(
+        (x['latitude'], x['longitude']), (x['lat_shifted'], x['lon_shifted'])), axis = 1)
+    
+    return delta
+
+
+
