@@ -1,11 +1,11 @@
 import tensorflow as tf
-import tensorflow.keras.layers.concatenate as concatenate
+from tensorflow.keras.layers import Concatenate
 
 class Concatenate(tf.keras.layers.Layer):
 
     def call(self, inputs):
         asc_dec, cru_dec, des_dec, concat_index = inputs
-        concat_dec = concatenate([asc_dec, cru_dec, des_dec], 0)
+        concat_dec = Concatenate([asc_dec, cru_dec, des_dec], 0)
         return tf.gather(concat_dec, tf.argsort(concat_index), axis=0)
 
     def get_config(self):
