@@ -10,7 +10,6 @@ setup(
         "pandas",
         "vincenty",
         "datetime",
-        "tensorflow",
         "pyproj",
     ],
 )
