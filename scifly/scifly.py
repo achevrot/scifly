@@ -88,6 +88,7 @@ def flight_points(phases, phase_min = 10):
 def distance_delta(input_df: pd.DataFrame) -> pd.Series:
     
     df = input_df.copy()
+    print("patate")
     df['lat_shifted'] = df['latitude'].shift(-1)
     df['lon_shifted'] = df['longitude'].shift(-1)
 

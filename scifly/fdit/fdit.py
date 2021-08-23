@@ -152,3 +152,62 @@ def sbs_converter(df: pd.DataFrame) -> pd.DataFrame:
     sbs_data.sort_values(by=["date", "time", "icao24"], inplace=True)
 
     return sbs_data
+
+
+def from_fdit(filename) -> pd.DataFrame:
+    cols = [
+        "msg",
+        "msg_type",
+        "msg_type2",
+        "icao24_dec",
+        "icao24",
+        "icao24_2",
+        "date",
+        "time",
+        "date_2",
+        "time_2",
+        "callsign",
+        "altitude",
+        "groundspeed",
+        "track",
+        "latitude",
+        "longitude",
+        "vertical_rate",
+        "squawk",
+        "alert",
+        "emergency",
+        "spi",
+        "surface",
+        "label",
+        "ano_type"
+    ]
+
+    sbs_data_ano = pd.read_csv(filename, names=cols)
+    sbs_data_legit = pd.read_csv(p / 'legit' / file.name, names=cols)
+    # Track delta
+    
+    track_delta = scifly.track_delta(sbs_data_legit)
+    sbs_data_ano['track_delta'] = track_delta[:len(sbs_data_ano)]
+    
+    # delta
+    
+    sbs_data_ano['delta'] = scifly.distance_delta(sbs_data_ano)
+    
+    # phase
+    
+    # Retrouver les timestamps
+    sbs_data_legit['timestamp'] = sbs_data_legit.apply(lambda row : pd.Timestamp(f"{row.date} {row.time}"), axis=1)
+    sbs_data_ano['phase'] = Flight(sbs_data_legit).phases().data.phase.values[:len(sbs_data_ano)]
+    sbs_data_ano['phase'] = sbs_data_ano.phase.replace('NA', None) #replace NA and LEVEL by None and automatically pad the serie
+    sbs_data_ano['phase'] = sbs_data_ano.phase.replace('LEVEL', None)
+    
+    # Final check to get rid of nan values that will disturb training
+    sbs_data_ano.drop(["squawk"], axis=1, inplace=True)
+    sbs_data_ano.dropna(inplace=True)
+    
+    serialized_data = serialize_example(sbs_data_ano)
+
+    # # Writing into tfrecord files
+
+    with tf.io.TFRecordWriter((p / f'tfrecord/{file.stem}.tfrecord').__str__()) as writer:
+        writer.write(serialized_data)   
