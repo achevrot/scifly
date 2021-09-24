@@ -164,7 +164,7 @@ vae = tf.keras.Model(inputs=encoder_inputs, outputs=dec_outputs, name="vae")
 
 # Add KL divergence regularization loss.
 
-def kl_divergence(z_mean, z_log_var):
+def kl_divergence(X, X_pred):
     kl_loss = -0.5*(1 + z_log_var - tf.square(z_mean) - tf.exp(z_log_var))
     kl_loss = tf.reduce_sum(kl_loss, axis=1)
     return tf.reduce_mean(kl_loss)
